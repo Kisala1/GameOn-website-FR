@@ -189,12 +189,12 @@ input {
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
-/* 
+
 input[data-error]::after {
     content: attr(data-error);
     font-size: 0.4em;
     color: red;
-} */
+} 
 
 /*--------"j'ai lu et ..."---------- */
 
@@ -489,10 +489,10 @@ footer {
     top: -5px;
     float: right;
     display: block;
-    color: red;
+    color: #ff0000;
   }
   .topnav a.icon:hover {
-    color: white;
+    color: #ffffff;
   }
   .topnav.responsive .icon {
     /* icon always visible after click */
