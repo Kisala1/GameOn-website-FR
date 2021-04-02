@@ -12,7 +12,7 @@ const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const closeForm = document.querySelectorAll('.close');
-const firtName = document.querySelectorAll('.first');
+const firstName = document.querySelectorAll('.first');
 const lastName = document.querySelectorAll('.last');
 const textControl = document.querySelectorAll('.text-control');
 
