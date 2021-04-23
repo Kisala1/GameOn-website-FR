@@ -13,7 +13,6 @@ const modalBtn = document.querySelectorAll(".modal-btn");
 const form = document.querySelector("#form");
 const formData = document.querySelectorAll(".formData");
 const closeForm = document.querySelectorAll(".close");
-const firstName = document.querySelector("#first");
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -37,98 +36,85 @@ modalbg.addEventListener("click", (event) => {
 
 /****************Validation Input Form****************************/
 
-// Input first name
+function registerCheck(input, checkFunction) {
+  console.log("aaaaaaaaaaaaaaaaa");
+  const check = () => input.setCustomValidity(checkFunction(input));
+  input.addEventListener("change", check);
+  input.addEventListener("input", check);
+  check();
+}
 
-firstName.addEventListener("change", function () {
-  validFirstName(this);
-});
-const validFirstName = function (inputFirst) {
-  let firstRegExp = /^[a-zàäâçèéëîïôöùûüÿ'-]+$/i;
+// Input first & last name
 
-  if (inputFirst.validity.valueMissing || inputFirst.value.length < 2) {
-    inputFirst.setCustomValidity(
-      "Veuillez entrer 2 caractères ou plus pour le champ prénom."
-    );
-  } else if (inputFirst.value.length > 25) {
-    inputFirst.setCustomValidity("Il y a trop de caractères.");
-  } else if (firstRegExp.test(inputFirst.value) == false) {
-    inputFirst.setCustomValidity("Caractère non valide.");
+const validName = function (input) {
+  const value = input.value;
+  if (value.length < 2) {
+    return "Veuillez entrer 2 caractères ou plus.";
   }
+  if (value.length > 25) {
+    return "Veuillez entrer 25 caractères ou moins.";
+  }
+  const nameRegExp = /^[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF '-]+$/;
+  if (!nameRegExp.test(value)) {
+    return "Veuillez n'entrer que des lettres, apostrophes ou tirets.";
+  }
+  return "";
 };
 
-// Input last name
-
-form.lastChild.addEventListener("change", function () {
-  validLastName(this);
+form.elements.first.addEventListener("change", function () {
+  this.setCustomValidity(validName(this));
 });
 
-const validLastName = function (inputLast) {
-  let lastRegExp = /^[a-zàäâçèéëîïôöùûüÿ'-\s]+$/i;
-  if (inputLast.value.length < 2 || inputFirst.validity.valueMissing) {
-    inputLast.setCustomValidity(
-      "Veuillez entrer 2 caractères ou plus pour le champ nom."
-    );
-  } else if (inputLast.value.length > 25) {
-    inputLast.setCustomValidity("Il y a trop de caractères.");
-  } else if (lastRegExp.test(inputLast.value) == false) {
-    inputLast.setCustomValidity("Caractère non valide.");
-  }
-};
+form.elements.last.addEventListener("change", function () {
+  this.setCustomValidity(validName(this));
+});
 
 // Input email
-form.email.addEventListener("click", function () {
-  validEmail(this);
-});
-const validEmail = function (inputEmail) {
-  let emailRegExp = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2-10}$/g;
 
-  if (emailRegExp.test(inputEmail.value)) {
-    inputEmail.setCustomValidity("Adresse valide.");
-  } else {
-    inputEmail.setCustomValidity("Adresse non valide.");
+const validEmail = function (input) {
+  const value = input.value;
+  let emailRegExp = /^[^@]+@[^@]+\.[^@]+$/;
+
+  if (!emailRegExp.test(value)) {
+    return "Veuillez entrez un email valide.";
   }
+  return "";
 };
+
+form.elements.email.addEventListener("change", function () {
+  this.setCustomValidity(validEmail(this));
+});
 
 // Date
-form.birthdate.addEventListener("click", function () {
-  validBirthdate(this);
-});
-const validBirthdate = function (inputBirthdate) {
-  let birthdateRegExp = /^[0-9]{2}\\[0-9]{2}\\[0-9]{4}$/g;
-  if (birthdateRegExp.test(inputBirthdate.value)) {
-    inputBirthdate.setCustomValidity("Date valide");
-  } else {
-    inputBirthdate.setCustomValidity("Date non valide");
-  }
-};
 
-// City + Checkbox
-form.quantity.addEventListener("click", function () {
-  validQuantity(this);
-});
-const validQuantity = function (inputQuantity) {
-  let quantityRegExp = /^[0-9]/g;
-  let cityChecked = document.querySelectorAll("checkbox-input");
-  if (quantityRegExp.test(inputQuantity.value < 0)) {
-    cityChecked.checked == true;
-  } else if (
-    quantityRegExp.test(inputQuantity.value < 0) &&
-    cityChecked.checked == false
-  ) {
-    cityChecked.setCustomValidity("Vous devez cocher au moins une ville.");
+const validBirthdate = function (input) {
+  const value = input.value;
+  const birthdateRegExp = /^[0-9]{4}\\[0-9]{2}\\[0-9]{2}$/;
+  if (birthdateRegExp.test(value)) {
+    return "Veuillez entrer une date valide.";
   }
+  return "";
 };
+form.elements.birthdate.addEventListener("change", function () {
+  this.setCustomValidity(validBirthdate(this));
+});
+
+// Input quantity + Checkbox
 
 // Conditions
+
 function checked() {
   let conditionChecked = document.querySelector("#checkbox1");
 
-  if (conditionChecked.checked == false) {
-    conditionChecked.setCustomValidity(
-      "Vous devez cocher cette case si vous voulez vous inscrire."
-    );
+  if (!conditionChecked.checked) {
+    return "Veuillez acceptez les termes et conditions.";
   }
 }
 
 // form valid
-form.button.addEventListener("onsubmit", function (e) {});
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  console.log("FORM SUBMITED!");
+  form.remove();
+  document.getElementById("formSuccessMessage").style.display = "block";
+});

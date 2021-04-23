@@ -238,10 +238,15 @@ input[data-error]::after {
   opacity: 0;
 }
 .checkbox-input {
-  display: none;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: -30px;
+  top: -1px;
+  opacity: 0.000001;
 }
-.checkbox-input:checked + .checkbox-label .checkbox-icon::after,
-.checkbox-input:checked + .checkbox2-label .checkbox-icon::after {
+.checkbox-input:checked + .checkbox-icon::after,
+.checkbox-input:checked + .checkbox-icon::after {
   opacity: 1;
 }
 .checkbox-input:checked + .checkbox2-label .checkbox-icon {
@@ -308,6 +313,9 @@ input[data-error]::after {
   border: 0;
 }
 
+#formSuccessMessage {
+  display: none;
+}
 /* custom select styles */
 .custom-select {
   position: relative;
