@@ -25,7 +25,7 @@ p {
   margin-bottom: 0;
   padding: 0.5vw;
 }
-/* ---------Navbar--------- */
+/* ----------------Navbar-------------------- */
 img {
   padding-right: 1rem;
 }
@@ -191,10 +191,10 @@ input {
 }
 
 input[data-error]::after {
-    content: attr(data-error);
-    font-size: 0.4em;
-    color: red;
-} 
+  content: attr(data-error);
+  font-size: 0.4em;
+  color: red;
+}
 
 /*--------"j'ai lu et ..."---------- */
 
@@ -465,13 +465,16 @@ footer {
     opacity: 1;
   }
 }
-/***************************************************** Responsive *******************************************************************/
+/********************************* Responsive ********************************************************/
 
 @media screen and (max-width: 1200px) {
   /*************** Navbar ****************/
   .header-logo img {
     display: inline-block;
     max-width: 80%;
+  }
+  .main-navbar {
+    top: 10px;
   }
   .topnav a {
     display: none;
@@ -500,14 +503,15 @@ footer {
     right: 0;
     top: -5px;
   }
-  
+
   /***********************************************/
   /************ Content *************/
+  .hero-content {
+    min-width: 390px;
+    grid-column: span 6;
+  }
   .hero-headline {
     font-size: 300%;
-  }
-  .hero-content {
-    grid-column: span 6;
   }
   .hero-content::after {
     right: 0;
@@ -519,6 +523,9 @@ footer {
 
   /************************For mobile***************************/
   @media screen and (max-width: 800px) {
+    .topnav.responsive .icon {
+      top: -5px;
+    }
     .hero-section {
       display: block;
       box-shadow: unset;
@@ -557,5 +564,15 @@ footer {
       margin-top: 50px;
       text-align: center;
     }
+  }
+}
+
+@media screen and (min-width: 557px) and (max-width: 1200px) {
+  /* Different margin-top from 557px */
+  .topnav.responsive .main-navbar {
+    margin-top: 40px;
+  }
+  .topnav .main-navbar {
+    margin-top: 0;
   }
 }
