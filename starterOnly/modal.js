@@ -13,6 +13,7 @@ const modalBtn = document.querySelectorAll(".modal-btn");
 const form = document.querySelector("#form");
 const formData = document.querySelectorAll(".formData");
 const closeForm = document.querySelectorAll(".close");
+const buttonCloseFormSuccess = document.querySelector("#buttonCloseFormSuccess");
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -34,22 +35,27 @@ modalbg.addEventListener("click", (event) => {
   }
 });
 
+buttonCloseFormSuccess.addEventListener("click", toCloseForm);
+
 /****************Validation Input Form****************************/
 
 function registerCheck(input, checkFunction) {
-  console.log("aaaaaaaaaaaaaaaaa");
   const check = () => input.setCustomValidity(checkFunction(input));
   input.addEventListener("change", check);
   input.addEventListener("input", check);
   check();
 }
 
+
 // Input first & last name
 
-const validName = function (input) {
+const validName = function(input) {
   const value = input.value;
   if (value.length < 2) {
-    return "Veuillez entrer 2 caractères ou plus.";
+    const messageError = document.createElement("span");
+    formData.appendChild("messageError");
+    messageError.setAttribute("name", "data-error");
+    messageError.innerHTML = "Veuillez entrer 2 caractères ou plus.";
   }
   if (value.length > 25) {
     return "Veuillez entrer 25 caractères ou moins.";

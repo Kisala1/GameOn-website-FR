@@ -196,8 +196,6 @@ input[data-error]::after {
   color: red;
 }
 
-/*--------"j'ai lu et ..."---------- */
-
 .checkbox-label,
 .checkbox2-label {
   position: relative;
@@ -243,7 +241,7 @@ input[data-error]::after {
   height: 20px;
   left: -30px;
   top: -1px;
-  opacity: 0.000001;
+  opacity: 0;
 }
 .checkbox-input:checked + .checkbox-icon::after,
 .checkbox-input:checked + .checkbox-icon::after {
@@ -314,8 +312,30 @@ input[data-error]::after {
 }
 
 #formSuccessMessage {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  height: 680px;
+  width: 434px;
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
 }
+#formSuccessMessage p {
+  font-size: 130%;
+  font-weight: normal;
+  position: relative;
+  top: 35%;
+  margin: 0 80px;
+  line-height: 45px;
+}
+#formSuccessMessage .button {
+  border: none;
+  font-size: 70%;
+  padding: 10px 50px;
+  margin: 0;
+  width: 35%;
+}
+
 /* custom select styles */
 .custom-select {
   position: relative;
@@ -512,7 +532,6 @@ footer {
     top: -5px;
   }
 
-  /***********************************************/
   /************ Content *************/
   .hero-content {
     min-width: 390px;
@@ -527,51 +546,53 @@ footer {
   .hero-img {
     grid-column: span 6;
   }
-  /*********************************/
+}
 
-  /************************For mobile***************************/
-  @media screen and (max-width: 800px) {
-    .topnav.responsive .icon {
-      top: -5px;
-    }
-    .hero-section {
-      display: block;
-      box-shadow: unset;
-    }
-    .hero-content {
-      display: flex;
-      flex-direction: column;
-      background: #fff;
-      color: #000;
-      padding: 20px;
-      min-width: auto;
-    }
-    .hero-content::after {
-      content: unset;
-    }
-    .hero-content .btn-signup {
-      display: none;
-    }
-    .hero-headline {
-      font-size: 230%;
-      white-space: inherit;
-    }
-    .hero-text {
-      width: auto;
-    }
-    .hero-img img {
-      border-radius: 10px;
-      margin-top: 40px;
-    }
-    .hero-section > .btn-signup {
-      display: block;
-      margin: 32px auto 10px;
-      padding: 12px 35px;
-    }
-    .copyrights {
-      margin-top: 50px;
-      text-align: center;
-    }
+/************************For mobile***************************/
+@media screen and (max-width: 800px) {
+  .topnav.responsive .icon {
+    top: -5px;
+  }
+  .hero-section {
+    display: block;
+    box-shadow: unset;
+  }
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    color: #000;
+    padding: 20px;
+    min-width: auto;
+  }
+  .hero-content::after {
+    content: unset;
+  }
+  .hero-content .btn-signup {
+    display: none;
+  }
+  .hero-headline {
+    font-size: 230%;
+    white-space: inherit;
+  }
+  .hero-text {
+    width: auto;
+  }
+  .hero-img img {
+    border-radius: 10px;
+    margin-top: 40px;
+  }
+  .hero-section > .btn-signup {
+    display: block;
+    margin: 32px auto 10px;
+    padding: 12px 35px;
+  }
+  .copyrights {
+    margin-top: 50px;
+    text-align: center;
+  }
+  #formSuccessMessage {
+    max-width: 300px;
   }
 }
 
