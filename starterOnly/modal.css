@@ -206,7 +206,7 @@ input[data-error]::after {
 /* Filling checkbox + animation */
 
 .checkbox-label .checkbox-icon,
-.checkbox2-label .checkbox-icon {
+.checkbox2-label .checkbox2-icon {
   display: block;
   width: 20px;
   height: 20px;
@@ -218,9 +218,10 @@ input[data-error]::after {
   left: -30px;
   top: -1px;
   transition: 0.3s;
+  padding: 2px;
 }
 .checkbox-label .checkbox-icon::after,
-.checkbox2-label .checkbox-icon::after {
+.checkbox2-label .checkbox2-icon::after {
   content: "";
   width: 13px;
   height: 13px;
@@ -244,18 +245,18 @@ input[data-error]::after {
   opacity: 0;
 }
 .checkbox-input:checked + .checkbox-icon::after,
-.checkbox-input:checked + .checkbox-icon::after {
+.checkbox-input:checked + .checkbox2-icon::after {
   opacity: 1;
 }
-.checkbox-input:checked + .checkbox2-label .checkbox-icon {
+.checkbox-input:checked ~ .checkbox2-icon {
   background: #279e7a;
 }
-.checkbox2-label .checkbox-icon {
+.checkbox2-label .checkbox2-icon {
   border-radius: 4px;
   border: 0;
   background: #c4c4c4;
 }
-.checkbox2-label .checkbox-icon::after {
+.checkbox2-label .checkbox2-icon::after {
   width: 7px;
   height: 4px;
   border-radius: 2px;
