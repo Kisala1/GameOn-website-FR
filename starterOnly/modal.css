@@ -313,7 +313,7 @@ input[data-error]::after {
 }
 
 #formSuccessMessage {
-  display: flex;
+  display: none;
   flex-direction: column;
   height: 680px;
   width: 434px;

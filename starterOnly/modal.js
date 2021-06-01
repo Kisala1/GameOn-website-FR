@@ -11,9 +11,11 @@ function editNav() {
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const form = document.querySelector("#form");
-const formData = document.querySelectorAll(".formData");
 const closeForm = document.querySelectorAll(".close");
-const buttonCloseFormSuccess = document.querySelector("#buttonCloseFormSuccess");
+const buttonCloseFormSuccess = document.querySelector(
+  "#buttonCloseFormSuccess"
+);
+const checkboxCity = document.querySelectorAll("#location1");
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -39,23 +41,23 @@ buttonCloseFormSuccess.addEventListener("click", toCloseForm);
 
 /****************Validation Input Form****************************/
 
-function registerCheck(input, checkFunction) {
-  const check = () => input.setCustomValidity(checkFunction(input));
-  input.addEventListener("change", check);
-  input.addEventListener("input", check);
-  check();
+function setErrorMessage(input, error) {
+  const formData = input.closest('.formData');
+  if (error) {
+    formData.setAttribute('data-error', error);
+    formData.setAttribute('data-error-visible', 'true');
+  } else {
+    formData.removeAttribute('data-error');
+    formData.removeAttribute('data-error-visible');
+  }
 }
-
 
 // Input first & last name
 
-const validName = function(input) {
+const validName = function (input) {
   const value = input.value;
   if (value.length < 2) {
-    const messageError = document.createElement("span");
-    formData.appendChild("messageError");
-    messageError.setAttribute("name", "data-error");
-    messageError.innerHTML = "Veuillez entrer 2 caractères ou plus.";
+    return "Veuillez entrer 2 caractères ou plus.";
   }
   if (value.length > 25) {
     return "Veuillez entrer 25 caractères ou moins.";
@@ -68,11 +70,11 @@ const validName = function(input) {
 };
 
 form.elements.first.addEventListener("change", function () {
-  this.setCustomValidity(validName(this));
+  setErrorMessage(this, validName(this));
 });
 
 form.elements.last.addEventListener("change", function () {
-  this.setCustomValidity(validName(this));
+  setErrorMessage(this, validName(this));
 });
 
 // Input email
@@ -88,7 +90,7 @@ const validEmail = function (input) {
 };
 
 form.elements.email.addEventListener("change", function () {
-  this.setCustomValidity(validEmail(this));
+  setErrorMessage(this, validEmail(this));
 });
 
 // Date
@@ -102,25 +104,55 @@ const validBirthdate = function (input) {
   return "";
 };
 form.elements.birthdate.addEventListener("change", function () {
-  this.setCustomValidity(validBirthdate(this));
+  setErrorMessage(this, validBirthdate(this));
 });
 
 // Input quantity + Checkbox
 
+const validNombreTournois = function (input) {
+  const value = input.value;
+  const regExpNombreTournois = /^[1-9]?[0-9]$/;
+  if (!regExpNombreTournois.test(value)) {
+    return "Veuillez entrer un nombre entre 0 et 99.";
+  }
+  return "";
+};
+
+function linkCheckboxCityAndNombreTournois() {
+  if (validNombreTournois.value >= 1) {
+    console.log("tre");
+    return typeof value;
+    if (checkboxCity.checked) {
+      return "Veuillez sélectionner une ville.";
+    }
+  } else if (
+    (checkboxCity.checked && validNombreTournois.value == 0) ||
+    validNombreTournois.length == 0
+  ) {
+    return "Veuillez entrer un nombre.";
+  }
+}
+form.elements.quantity.addEventListener("change", function () {
+  setErrorMessage(this, validNombreTournois(this));
+});
+
 // Conditions
 
 function checked() {
-  let conditionChecked = document.querySelector("#checkbox1");
+  const conditionChecked = document.querySelector("#checkbox1");
 
   if (!conditionChecked.checked) {
     return "Veuillez acceptez les termes et conditions.";
   }
+  return "";
 }
+form.elements.checkbox1.addEventListener("change", function () {
+  setErrorMessage(this, checked(this));
+});
 
 // form valid
 form.addEventListener("submit", function (e) {
   e.preventDefault();
-  console.log("FORM SUBMITED!");
   form.remove();
-  document.getElementById("formSuccessMessage").style.display = "block";
+  document.getElementById("formSuccessMessage").style.display = "flex";
 });
