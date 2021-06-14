@@ -51,11 +51,30 @@ img {
   font-size: 20px;
   font-family: Roboto, sans-serif;
 }
-
+.topnav a span {
+  position: relative;
+}
+.topnav a span::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 50%;
+  top : 25px;
+  width: 0;
+  height: 1px;
+  background-color: #fff;
+  opacity: 0.7;
+  transition: all 0.5s ease-in-out;
+}
+.topnav a span:hover::before {
+  left: 0;
+  width: 100%;
+}
 .topnav a:hover {
   background-color: #ff0000;
   color: #ffffff;
   border-radius: 15px;
+
 }
 
 .topnav a.active {
@@ -178,7 +197,7 @@ input {
   display: block;
   margin-top: 7px;
   margin-bottom: 7px;
-  text-align: right;
+  text-align: left;
   line-height: 0.3;
   opacity: 0;
   transition: 0.3s;
@@ -403,6 +422,7 @@ input[data-error]::after {
 .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
 /* custom select end */
 
 .text-label {
@@ -505,6 +525,17 @@ footer {
   .main-navbar {
     top: 10px;
   }
+  .main-navbar a {
+    background-color: #fff;
+    border-radius: 15px;
+  }
+  .topnav {
+    z-index: 2;
+    padding-top: 20px;
+  }
+  .bground {
+    margin-top: 120px;
+  }
   .topnav a {
     display: none;
   }
@@ -518,7 +549,7 @@ footer {
   }
   .topnav a.icon {
     position: relative;
-    top: -5px;
+    top: -25px;
     float: right;
     display: block;
     color: #ff0000;
@@ -551,8 +582,23 @@ footer {
 
 /************************For mobile***************************/
 @media screen and (max-width: 800px) {
-  .topnav.responsive .icon {
-    top: -5px;
+  .header-logo {
+    max-width: 80%;
+  }
+  .topnav {
+    z-index: 2;
+  }
+  .topnav a.icon {
+    top: 10px;
+  }
+  .topnav.responsive a.icon {
+    top: 10px;
+  }
+  .bground {
+    margin-top: 100px;
+  }
+  .content {
+    top: -2%;
   }
   .hero-section {
     display: block;

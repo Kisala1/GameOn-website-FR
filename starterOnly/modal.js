@@ -10,12 +10,14 @@ function editNav() {
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
+const topNav = document.querySelector(".topnav");
 const form = document.querySelector("#form");
 const closeForm = document.querySelectorAll(".close");
 const buttonCloseFormSuccess = document.querySelector(
   "#buttonCloseFormSuccess"
 );
-const checkboxCity = document.querySelectorAll("#location1");
+const checkboxCity = document.querySelectorAll("input[name='location']");
+const hideButtonsRadio = document.querySelector(".hide");
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -41,20 +43,26 @@ buttonCloseFormSuccess.addEventListener("click", toCloseForm);
 
 /****************Validation Input Form****************************/
 
+function registerInputValidation(input, validateFn) {
+  input.addEventListener("change", function () {
+    setErrorMessage(this, validateFn(this));
+  });
+}
+
 function setErrorMessage(input, error) {
-  const formData = input.closest('.formData');
+  const formData = input.closest(".formData");
   if (error) {
-    formData.setAttribute('data-error', error);
-    formData.setAttribute('data-error-visible', 'true');
+    formData.setAttribute("data-error", error);
+    formData.setAttribute("data-error-visible", "true");
   } else {
-    formData.removeAttribute('data-error');
-    formData.removeAttribute('data-error-visible');
+    formData.removeAttribute("data-error");
+    formData.removeAttribute("data-error-visible");
   }
 }
 
 // Input first & last name
 
-const validName = function (input) {
+function validateName(input) {
   const value = input.value;
   if (value.length < 2) {
     return "Veuillez entrer 2 caractères ou plus.";
@@ -67,92 +75,114 @@ const validName = function (input) {
     return "Veuillez n'entrer que des lettres, apostrophes ou tirets.";
   }
   return "";
-};
+}
 
-form.elements.first.addEventListener("change", function () {
-  setErrorMessage(this, validName(this));
-});
-
-form.elements.last.addEventListener("change", function () {
-  setErrorMessage(this, validName(this));
-});
+registerInputValidation(form.elements.first, validateName);
+registerInputValidation(form.elements.last, validateName);
 
 // Input email
 
-const validEmail = function (input) {
+function validateEmail(input) {
   const value = input.value;
-  let emailRegExp = /^[^@]+@[^@]+\.[^@]+$/;
+  const emailRegExp = /^[^@]+@[^@]+\.[^@]+$/;
 
   if (!emailRegExp.test(value)) {
     return "Veuillez entrez un email valide.";
   }
   return "";
-};
+}
 
-form.elements.email.addEventListener("change", function () {
-  setErrorMessage(this, validEmail(this));
-});
+registerInputValidation(form.elements.email, validateEmail);
 
-// Date
+// Input Birthdate
 
-const validBirthdate = function (input) {
+function validateBirthdate(input) {
   const value = input.value;
   const birthdateRegExp = /^[0-9]{4}\\[0-9]{2}\\[0-9]{2}$/;
   if (birthdateRegExp.test(value)) {
     return "Veuillez entrer une date valide.";
   }
   return "";
-};
-form.elements.birthdate.addEventListener("change", function () {
-  setErrorMessage(this, validBirthdate(this));
-});
+}
+
+registerInputValidation(form.elements.birthdate, validateBirthdate);
 
 // Input quantity + Checkbox
 
-const validNombreTournois = function (input) {
+const validNumberAndCheckboxCity = function (input) {
   const value = input.value;
-  const regExpNombreTournois = /^[1-9]?[0-9]$/;
-  if (!regExpNombreTournois.test(value)) {
+  const regExpNumberTournament = /^[1-9]?[0-9]$/;
+  if (!regExpNumberTournament.test(value)) {
     return "Veuillez entrer un nombre entre 0 et 99.";
   }
-  return "";
-};
-
-function linkCheckboxCityAndNombreTournois() {
-  if (validNombreTournois.value >= 1) {
-    console.log("tre");
-    return typeof value;
-    if (checkboxCity.checked) {
-      return "Veuillez sélectionner une ville.";
+  if (value >= 1) {
+    hideButtonsRadio.style.display = "block";
+    if (!checkboxCity.checked) {
+      return "Veuillez choisir une ville";
     }
-  } else if (
-    (checkboxCity.checked && validNombreTournois.value == 0) ||
-    validNombreTournois.length == 0
-  ) {
-    return "Veuillez entrer un nombre.";
+    return "";
+  } else {
+    hideButtonsRadio.style.display = "none";
   }
-}
+};
+checkboxCity.forEach((elem) => {
+  elem.addEventListener("change", (event) => {
+    var item = event.target.value;
+    console.log(item);
+  });
+});
+
 form.elements.quantity.addEventListener("change", function () {
-  setErrorMessage(this, validNombreTournois(this));
+  setErrorMessage(this, validNumberAndCheckboxCity(this));
 });
 
 // Conditions
 
-function checked() {
-  const conditionChecked = document.querySelector("#checkbox1");
-
-  if (!conditionChecked.checked) {
+function validateConditionChecked(input) {
+  if (!input.checked) {
     return "Veuillez acceptez les termes et conditions.";
   }
   return "";
 }
-form.elements.checkbox1.addEventListener("change", function () {
-  setErrorMessage(this, checked(this));
-});
+
+registerInputValidation(form.elements.checkbox1, validateConditionChecked);
 
 // form valid
+
+const formInputs = [
+  {
+    input: form.elements.first,
+    validateFn: validateName,
+  },
+  {
+    input: form.elements.last,
+    validateFn: validateName,
+  },
+  {
+    input: form.elements.email,
+    validateFn: validateEmail,
+  },
+  {
+    input: form.elements.birthdate,
+    validateFn: validateBirthdate,
+  },
+  {
+    input: form.elements.checkbox1,
+    validateFn: validateConditionChecked,
+  },
+];
+
+for (const { input, validateFn } of formInputs) {
+  console.log("### FOR ###");
+  console.log("input=", input);
+  console.log("validateFn=", validateFn);
+  input.addEventListener("change", function () {
+    setErrorMessage(this, validateFn(this));
+  });
+}
 form.addEventListener("submit", function (e) {
   e.preventDefault();
+  // TODO faire un recheck de tous les input avant de submit
   form.remove();
   document.getElementById("formSuccessMessage").style.display = "flex";
 });
