@@ -16,7 +16,9 @@ const closeForm = document.querySelectorAll(".close");
 const buttonCloseFormSuccess = document.querySelector(
   "#buttonCloseFormSuccess"
 );
-const checkboxCity = document.querySelectorAll("input[name='location']");
+const checkboxCity = document.querySelectorAll(
+  "input[name='location']:checked"
+);
 const hideButtonsRadio = document.querySelector(".hide");
 
 // launch modal event
@@ -41,26 +43,33 @@ modalbg.addEventListener("click", (event) => {
 
 buttonCloseFormSuccess.addEventListener("click", toCloseForm);
 
-/****************Validation Input Form****************************/
-
-function registerInputValidation(input, validateFn) {
-  input.addEventListener("change", function () {
-    setErrorMessage(this, validateFn(this));
-  });
-}
-
-function setErrorMessage(input, error) {
-  const formData = input.closest(".formData");
-  if (error) {
-    formData.setAttribute("data-error", error);
-    formData.setAttribute("data-error-visible", "true");
-  } else {
-    formData.removeAttribute("data-error");
-    formData.removeAttribute("data-error-visible");
+// FIXME
+/*
+const validNumberAndCheckboxCity = function (input) {
+  const value = input.value;
+  const regExpNumberTournament = /^[1-9]?[0-9]$/;
+  if (!regExpNumberTournament.test(value)) {
+    return "Veuillez entrer un nombre entre 0 et 99.";
   }
-}
+  if (value >= 1) {
+    if (!checkboxCity) {
+      hideButtonsRadio.style.display = "block";
+      console.log("her");
+      return "Veuillez choisir une ville";
+    }
+  } else {
+    hideButtonsRadio.style.display = "none";
+    return "";
+  }
+};
+form.elements.quantity.addEventListener("change", function () {
+  setErrorMessage(this, validNumberAndCheckboxCity(this));
+});
+*/
 
-// Input first & last name
+// =========================================================
+// Fonctions de validation
+// =========================================================
 
 function validateName(input) {
   const value = input.value;
@@ -77,11 +86,6 @@ function validateName(input) {
   return "";
 }
 
-registerInputValidation(form.elements.first, validateName);
-registerInputValidation(form.elements.last, validateName);
-
-// Input email
-
 function validateEmail(input) {
   const value = input.value;
   const emailRegExp = /^[^@]+@[^@]+\.[^@]+$/;
@@ -92,10 +96,6 @@ function validateEmail(input) {
   return "";
 }
 
-registerInputValidation(form.elements.email, validateEmail);
-
-// Input Birthdate
-
 function validateBirthdate(input) {
   const value = input.value;
   const birthdateRegExp = /^[0-9]{4}\\[0-9]{2}\\[0-9]{2}$/;
@@ -105,39 +105,6 @@ function validateBirthdate(input) {
   return "";
 }
 
-registerInputValidation(form.elements.birthdate, validateBirthdate);
-
-// Input quantity + Checkbox
-
-const validNumberAndCheckboxCity = function (input) {
-  const value = input.value;
-  const regExpNumberTournament = /^[1-9]?[0-9]$/;
-  if (!regExpNumberTournament.test(value)) {
-    return "Veuillez entrer un nombre entre 0 et 99.";
-  }
-  if (value >= 1) {
-    hideButtonsRadio.style.display = "block";
-    if (!checkboxCity.checked) {
-      return "Veuillez choisir une ville";
-    }
-    return "";
-  } else {
-    hideButtonsRadio.style.display = "none";
-  }
-};
-checkboxCity.forEach((elem) => {
-  elem.addEventListener("change", (event) => {
-    var item = event.target.value;
-    console.log(item);
-  });
-});
-
-form.elements.quantity.addEventListener("change", function () {
-  setErrorMessage(this, validNumberAndCheckboxCity(this));
-});
-
-// Conditions
-
 function validateConditionChecked(input) {
   if (!input.checked) {
     return "Veuillez acceptez les termes et conditions.";
@@ -145,10 +112,22 @@ function validateConditionChecked(input) {
   return "";
 }
 
-registerInputValidation(form.elements.checkbox1, validateConditionChecked);
+function setErrorMessage(input, error) {
+  const formData = input.closest(".formData");
+  if (error) {
+    formData.setAttribute("data-error", error);
+    formData.setAttribute("data-error-visible", "true");
+  } else {
+    formData.removeAttribute("data-error");
+    formData.removeAttribute("data-error-visible");
+  }
+}
 
-// form valid
+// =========================================================
+// Validation du formulaire
+// =========================================================
 
+// Définition des inputs
 const formInputs = [
   {
     input: form.elements.first,
@@ -172,17 +151,31 @@ const formInputs = [
   },
 ];
 
+// Ajouter la validation dynamique pour chaque input
 for (const { input, validateFn } of formInputs) {
-  console.log("### FOR ###");
-  console.log("input=", input);
-  console.log("validateFn=", validateFn);
   input.addEventListener("change", function () {
-    setErrorMessage(this, validateFn(this));
+    setErrorMessage(input, validateFn(input));
   });
 }
+
+// Écouter l'event submit du formulaire
 form.addEventListener("submit", function (e) {
+  // Annuler le comportement par défaut (envoi du formulaire)
   e.preventDefault();
-  // TODO faire un recheck de tous les input avant de submit
-  form.remove();
-  document.getElementById("formSuccessMessage").style.display = "flex";
+
+  // Valider les inputs et compter le nombre d'erreurs
+  let errorCount = 0;
+  for (const { input, validateFn } of formInputs) {
+    const error = validateFn(input);
+    setErrorMessage(input, error);
+    if (error) {
+      errorCount++;
+    }
+  }
+
+  // Si il n'y a aucune erreur, afficher le message de succès
+  if (errorCount === 0) {
+    form.remove();
+    document.getElementById("formSuccessMessage").style.display = "flex";
+  }
 });
