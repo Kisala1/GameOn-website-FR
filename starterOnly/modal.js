@@ -7,65 +7,46 @@ function editNav() {
   }
 }
 
-// DOM Elements
-const modalbg = document.querySelector(".bground");
-const modalBtn = document.querySelectorAll(".modal-btn");
-const topNav = document.querySelector(".topnav");
-const form = document.querySelector("#form");
-const closeForm = document.querySelectorAll(".close");
-const buttonCloseFormSuccess = document.querySelector(
-  "#buttonCloseFormSuccess"
-);
-const checkboxCity = document.querySelectorAll(
-  "input[name='location']:checked"
-);
-const hideButtonsRadio = document.querySelector(".hide");
+// =========================================================
+// Modal
+// =========================================================
 
-// launch modal event
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
-
-// launch modal form
-function launchModal() {
-  modalbg.style.display = "block";
-}
-
-// to close form
-closeForm.forEach((close) => close.addEventListener("click", toCloseForm));
-function toCloseForm() {
-  modalbg.style.display = "none";
-}
-
-modalbg.addEventListener("click", (event) => {
-  if (event.target === modalbg) {
-    toCloseForm();
+function addModal(modalBg, launchBtns, closeBtns) {
+  function launchModal() {
+    modalBg.style.display = "block";
   }
-});
+  function closeModal() {
+    modalBg.style.display = "none";
+  }
 
-buttonCloseFormSuccess.addEventListener("click", toCloseForm);
+  modalBg.addEventListener("click", (event) => {
+    if (event.target === modalBg) {
+      closeModal();
+    }
+  });
+
+  for (const btn of launchBtns) {
+    btn.addEventListener("click", launchModal);
+  }
+
+  for (const btn of closeBtns) {
+    btn.addEventListener("click", closeModal);
+  }
+}
+
+const modalBg = document.querySelector(".bground");
+const modalBtn = document.querySelectorAll(".modal-btn");
+const modalClose = document.querySelectorAll(".close");
+const btnCloseFormSuccess = document.querySelector("#buttonCloseFormSuccess");
+addModal(modalBg, modalBtn, [...modalClose, btnCloseFormSuccess]);
 
 // FIXME
-/*
-const validNumberAndCheckboxCity = function (input) {
-  const value = input.value;
-  const regExpNumberTournament = /^[1-9]?[0-9]$/;
-  if (!regExpNumberTournament.test(value)) {
-    return "Veuillez entrer un nombre entre 0 et 99.";
-  }
-  if (value >= 1) {
-    if (!checkboxCity) {
-      hideButtonsRadio.style.display = "block";
-      console.log("her");
-      return "Veuillez choisir une ville";
-    }
-  } else {
-    hideButtonsRadio.style.display = "none";
-    return "";
-  }
-};
-form.elements.quantity.addEventListener("change", function () {
-  setErrorMessage(this, validNumberAndCheckboxCity(this));
-});
-*/
+//const hideButtonsRadio = document.querySelector(".hide");
+//const value = input.value;
+//const regExpNumberTournament = /^[1-9]?[0-9]$/;
+/*if (!regExpNumberTournament.test(value)) {
+  return "Veuillez entrer un nombre entre 0 et 99.";
+}*/
 
 // =========================================================
 // Fonctions de validation
@@ -112,6 +93,10 @@ function validateConditionChecked(input) {
   return "";
 }
 
+// =========================================================
+// Validation du formulaire
+// =========================================================
+
 function setErrorMessage(input, error) {
   const formData = input.closest(".formData");
   if (error) {
@@ -123,12 +108,40 @@ function setErrorMessage(input, error) {
   }
 }
 
-// =========================================================
-// Validation du formulaire
-// =========================================================
+function addFormValidation(form, formInputs) {
+  // Ajouter la validation dynamique pour chaque input
+  for (const { input, validateFn } of formInputs) {
+    input.addEventListener("change", function () {
+      setErrorMessage(input, validateFn(input));
+    });
+  }
+
+  // Écouter l'event submit du formulaire
+  form.addEventListener("submit", function (e) {
+    // Annuler le comportement par défaut (envoi du formulaire)
+    e.preventDefault();
+
+    // Valider les inputs et compter le nombre d'erreurs
+    let errorCount = 0;
+    for (const { input, validateFn } of formInputs) {
+      const error = validateFn(input);
+      setErrorMessage(input, error);
+      if (error) {
+        errorCount++;
+      }
+    }
+
+    // Si il n'y a aucune erreur, afficher le message de succès
+    if (errorCount === 0) {
+      form.remove();
+      document.getElementById("formSuccessMessage").style.display = "flex";
+    }
+  });
+}
 
 // Définition des inputs
-const formInputs = [
+const form = document.querySelector("#form");
+addFormValidation(form, [
   {
     input: form.elements.first,
     validateFn: validateName,
@@ -149,33 +162,4 @@ const formInputs = [
     input: form.elements.checkbox1,
     validateFn: validateConditionChecked,
   },
-];
-
-// Ajouter la validation dynamique pour chaque input
-for (const { input, validateFn } of formInputs) {
-  input.addEventListener("change", function () {
-    setErrorMessage(input, validateFn(input));
-  });
-}
-
-// Écouter l'event submit du formulaire
-form.addEventListener("submit", function (e) {
-  // Annuler le comportement par défaut (envoi du formulaire)
-  e.preventDefault();
-
-  // Valider les inputs et compter le nombre d'erreurs
-  let errorCount = 0;
-  for (const { input, validateFn } of formInputs) {
-    const error = validateFn(input);
-    setErrorMessage(input, error);
-    if (error) {
-      errorCount++;
-    }
-  }
-
-  // Si il n'y a aucune erreur, afficher le message de succès
-  if (errorCount === 0) {
-    form.remove();
-    document.getElementById("formSuccessMessage").style.display = "flex";
-  }
-});
+]);
