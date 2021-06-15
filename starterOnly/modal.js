@@ -1,3 +1,4 @@
+// TODO: JSDoc
 function editNav() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
@@ -11,6 +12,7 @@ function editNav() {
 // Modal
 // =========================================================
 
+// TODO: JSDoc
 function addModal(modalBg, launchBtns, closeBtns) {
   function launchModal() {
     modalBg.style.display = "block";
@@ -40,18 +42,16 @@ const modalClose = document.querySelectorAll(".close");
 const btnCloseFormSuccess = document.querySelector("#buttonCloseFormSuccess");
 addModal(modalBg, modalBtn, [...modalClose, btnCloseFormSuccess]);
 
-// FIXME
-//const hideButtonsRadio = document.querySelector(".hide");
-//const value = input.value;
-//const regExpNumberTournament = /^[1-9]?[0-9]$/;
-/*if (!regExpNumberTournament.test(value)) {
-  return "Veuillez entrer un nombre entre 0 et 99.";
-}*/
-
 // =========================================================
 // Fonctions de validation
 // =========================================================
 
+/**
+ * Vérifie que l'input contient un prénom ou nom.
+ *
+ * @param {HTMLInputElement} input L'input
+ * @returns {string} le message d'erreur; ou une string vide en cas de succès.
+ */
 function validateName(input) {
   const value = input.value;
   if (value.length < 2) {
@@ -67,6 +67,12 @@ function validateName(input) {
   return "";
 }
 
+/**
+ * Vérifie que l'input contient un email.
+ *
+ * @param {HTMLInputElement} input L'input
+ * @returns {string} le message d'erreur; ou une string vide en cas de succès.
+ */
 function validateEmail(input) {
   const value = input.value;
   const emailRegExp = /^[^@]+@[^@]+\.[^@]+$/;
@@ -77,15 +83,49 @@ function validateEmail(input) {
   return "";
 }
 
+/**
+ * Vérifie que l'input contient une date de naissance.
+ *
+ * @param {HTMLInputElement} input L'input
+ * @returns {string} le message d'erreur; ou une string vide en cas de succès.
+ */
 function validateBirthdate(input) {
   const value = input.value;
-  const birthdateRegExp = /^[0-9]{4}\\[0-9]{2}\\[0-9]{2}$/;
-  if (birthdateRegExp.test(value)) {
+  const birthdateRegExp =
+    /^[0-9]{4}\-(0[1-9]|1[0-2])\-(0[1-9]|[12][0-9]|3[01])$/;
+  if (!birthdateRegExp.test(value)) {
     return "Veuillez entrer une date valide.";
   }
   return "";
 }
 
+// TODO: JSDoc
+function validateQuantity(input) {
+  const value = input.value;
+  const intValue = parseInt(value);
+  if (isNaN(intValue) || intValue < 0 || intValue > 99) {
+    return "Veuillez entrer une quantité valide.";
+  }
+  return "";
+}
+
+// TODO: JSDoc
+function validateLocation(input, { quantityInput }) {
+  const value = input.value;
+  const valueQuantity = parseInt(quantityInput.value);
+  if (valueQuantity >= 1 && value === "") {
+    return "Veuillez sélectionner une ville.";
+  }
+  return "";
+}
+
+/**
+ * Vérifie que l'input, "J'ai lu et accepté les conditions d'utilisation"
+ * soit coché.
+ *
+ * @param {HTMLInputElement} input L'input
+ * @returns {string} le message d'erreur; ou une string vide en cas de succès.
+ */
 function validateConditionChecked(input) {
   if (!input.checked) {
     return "Veuillez acceptez les termes et conditions.";
@@ -97,8 +137,23 @@ function validateConditionChecked(input) {
 // Validation du formulaire
 // =========================================================
 
+// TODO: JSDoc
+function inputToArray(input) {
+  if (input.length !== undefined) {
+    return [...input];
+  } else {
+    return [input];
+  }
+}
+
+/**
+ * Permet d'afficher le message d'erreur pour l'input.
+ *
+ * @param {HTMLInputElement|NodeList} input L'input
+ * @param {string} error Message d'erreur ou une string vide
+ */
 function setErrorMessage(input, error) {
-  const formData = input.closest(".formData");
+  const formData = inputToArray(input)[0].closest(".formData");
   if (error) {
     formData.setAttribute("data-error", error);
     formData.setAttribute("data-error-visible", "true");
@@ -108,11 +163,18 @@ function setErrorMessage(input, error) {
   }
 }
 
+/**
+ *
+ * @param {*} form
+ * @param {*} formInputs
+ */
 function addFormValidation(form, formInputs) {
   // Ajouter la validation dynamique pour chaque input
-  for (const { input, validateFn } of formInputs) {
-    input.addEventListener("change", function () {
-      setErrorMessage(input, validateFn(input));
+  for (const { input, validateFn, validateParams } of formInputs) {
+    inputToArray(input).forEach(function (i) {
+      i.addEventListener("change", function () {
+        setErrorMessage(input, validateFn(input, validateParams));
+      });
     });
   }
 
@@ -123,8 +185,8 @@ function addFormValidation(form, formInputs) {
 
     // Valider les inputs et compter le nombre d'erreurs
     let errorCount = 0;
-    for (const { input, validateFn } of formInputs) {
-      const error = validateFn(input);
+    for (const { input, validateFn, validateParams } of formInputs) {
+      const error = validateFn(input, validateParams);
       setErrorMessage(input, error);
       if (error) {
         errorCount++;
@@ -159,7 +221,19 @@ addFormValidation(form, [
     validateFn: validateBirthdate,
   },
   {
+    input: form.elements.quantity,
+    validateFn: validateQuantity,
+  },
+  {
+    input: form.elements.location,
+    validateFn: validateLocation,
+    validateParams: { quantityInput: form.elements.quantity },
+  },
+  {
     input: form.elements.checkbox1,
     validateFn: validateConditionChecked,
   },
 ]);
+
+// TODO: Masquer la section location quand quantity n'est pas >= 1
+//const hideButtonsRadio = document.querySelector(".hide");

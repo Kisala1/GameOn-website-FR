@@ -45,7 +45,7 @@ img {
   display: block;
   color: #000000;
   text-align: center;
-  padding: 12px 12px;
+  padding: 10px 10px;
   margin: 5px;
   text-decoration: none;
   font-size: 20px;
@@ -447,9 +447,9 @@ footer {
   }
 }
 /********************************* Responsive ********************************************************/
-
+ 
 @media screen and (max-width: 1200px) {
-  /*************** Navbar ****************/
+
   .header-logo img {
     display: inline-block;
     max-width: 80%;
@@ -464,6 +464,10 @@ footer {
   .topnav {
     z-index: 2;
     padding-top: 20px;
+  }
+  .topnav a span::before {
+    content: "";
+    display: none;
   }
   .bground {
     margin-top: 120px;
@@ -481,7 +485,7 @@ footer {
   }
   .topnav a.icon {
     position: relative;
-    top: -25px;
+    top: -5px;
     float: right;
     display: block;
     color: #ff0000;
@@ -493,10 +497,9 @@ footer {
     /* icon always visible after click */
     position: absolute;
     right: 0;
-    top: -5px;
+    top: 15px;
   }
 
-  /************ Content *************/
   .hero-content {
     min-width: 390px;
     grid-column: span 6;
@@ -510,8 +513,15 @@ footer {
   .hero-img {
     grid-column: span 6;
   }
-}
 
+  .topnav.responsive .main-navbar {
+    margin-top: 40px;
+  }
+  .topnav .main-navbar {
+    margin-top: 0;
+  }
+  
+}
 /************************For mobile***************************/
 @media screen and (max-width: 800px) {
   .header-logo {
@@ -521,7 +531,7 @@ footer {
     z-index: 2;
   }
   .topnav a.icon {
-    top: 10px;
+    top: -10px;
   }
   .topnav.responsive a.icon {
     top: 10px;
@@ -572,15 +582,5 @@ footer {
   }
   #formSuccessMessage {
     max-width: 300px;
-  }
-}
-
-@media screen and (min-width: 557px) and (max-width: 1200px) {
-  /* Different margin-top from 557px */
-  .topnav.responsive .main-navbar {
-    margin-top: 40px;
-  }
-  .topnav .main-navbar {
-    margin-top: 0;
   }
 }
