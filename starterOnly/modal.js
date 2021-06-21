@@ -1,4 +1,7 @@
-// TODO: JSDoc
+/**
+ * Permet d'ajouter une class à myTopnav.
+ *
+ */
 function editNav() {
   var x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
@@ -12,7 +15,13 @@ function editNav() {
 // Modal
 // =========================================================
 
-// TODO: JSDoc
+/**
+ * Permet de faire apparaître et fermer le formulaire.
+ *
+ * @param {HTMLElement} modalBg Div bground
+ * @param {HTMLElement} launchBtns Button modal-btn
+ * @param {HTMLElement} closeBtns Buttons : modalClose + btnCloseFormSuccess
+ */
 function addModal(modalBg, launchBtns, closeBtns) {
   function launchModal() {
     modalBg.style.display = "block";
@@ -99,17 +108,32 @@ function validateBirthdate(input) {
   return "";
 }
 
-// TODO: JSDoc
+/**
+ * Vérifie que l'input contient une nombre valide.
+ *
+ * @param {HTMLInputElement} input L'input
+ * @returns {string} le message d'erreur; ou une string vide en cas de succès.
+ */
 function validateQuantity(input) {
   const value = input.value;
   const intValue = parseInt(value);
   if (isNaN(intValue) || intValue < 0 || intValue > 99) {
-    return "Veuillez entrer une quantité valide.";
+    return "Veuillez entrer une nombre valide.";
+  }
+  if (intValue === 0) {
+    const hideButtonsRadio = document.querySelector(".hide");
+    hideButtonsRadio.style.display = "none";
   }
   return "";
 }
 
-// TODO: JSDoc
+/**
+ * Vérifie qu'un input soit coché si quantity a une valeur >= 1.
+ *
+ * @param {HTMLInputElement} input L'input
+ * @param {HTMLInputElement} param1 L'input quantity
+ * @returns {string} le message d'erreur; ou une string vide en cas de succès.
+ */
 function validateLocation(input, { quantityInput }) {
   const value = input.value;
   const valueQuantity = parseInt(quantityInput.value);
@@ -137,7 +161,12 @@ function validateConditionChecked(input) {
 // Validation du formulaire
 // =========================================================
 
-// TODO: JSDoc
+/**
+ * Transforme tous les inputs en un array.
+ *
+ * @param {HTMLInputElement} input L'input
+ * @returns {Array}
+ */
 function inputToArray(input) {
   if (input.length !== undefined) {
     return [...input];
@@ -162,11 +191,11 @@ function setErrorMessage(input, error) {
     formData.removeAttribute("data-error-visible");
   }
 }
-
 /**
+ * Permet de faire la validation des inputs.
  *
- * @param {*} form
- * @param {*} formInputs
+ * @param {HTMLElement} form
+ * @param {*} formInputs Array : input, validateFn, validateParams
  */
 function addFormValidation(form, formInputs) {
   // Ajouter la validation dynamique pour chaque input
@@ -234,6 +263,3 @@ addFormValidation(form, [
     validateFn: validateConditionChecked,
   },
 ]);
-
-// TODO: Masquer la section location quand quantity n'est pas >= 1
-//const hideButtonsRadio = document.querySelector(".hide");
