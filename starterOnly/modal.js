@@ -120,10 +120,6 @@ function validateQuantity(input) {
   if (isNaN(intValue) || intValue < 0 || intValue > 99) {
     return "Veuillez entrer une nombre valide.";
   }
-  if (intValue === 0) {
-    const hideButtonsRadio = document.querySelector(".hide");
-    hideButtonsRadio.style.display = "none";
-  }
   return "";
 }
 
@@ -164,11 +160,12 @@ function validateConditionChecked(input) {
 /**
  * Transforme tous les inputs en un array.
  *
- * @param {HTMLInputElement} input L'input
+ * @param {HTMLInputElement|NodeList} L'input ou NodeList
  * @returns {Array}
  */
 function inputToArray(input) {
   if (input.length !== undefined) {
+    // if NodeList
     return [...input];
   } else {
     return [input];
@@ -195,7 +192,7 @@ function setErrorMessage(input, error) {
  * Permet de faire la validation des inputs.
  *
  * @param {HTMLElement} form
- * @param {*} formInputs Array : input, validateFn, validateParams
+ * @param {Array} formInputs Array : input, validateFn, validateParams
  */
 function addFormValidation(form, formInputs) {
   // Ajouter la validation dynamique pour chaque input
@@ -263,3 +260,19 @@ addFormValidation(form, [
     validateFn: validateConditionChecked,
   },
 ]);
+
+// Écouter l'event change de l'input quantity
+
+form.elements.quantity.addEventListener("change", function () {
+  const value = this.value;
+  const intValue = parseInt(value);
+  const hideButtonsRadio = document.getElementById("location-hide");
+  // Si égal 0 fait disparaître hideButtonsRadio
+
+  if (intValue === 0) {
+    hideButtonsRadio.style.display = "none";
+    // Sinon applique le style initiale de hideButtonsRadio
+  } else {
+    hideButtonsRadio.style.display = "";
+  }
+});
